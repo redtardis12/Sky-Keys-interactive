@@ -16,11 +16,11 @@ The first release with a build and installer will be available soon. Now you can
 1. Have the latest version of python installed on your system from [python.org](https://python.org)
 2. In your command line execute:
 
-    pip install flet
+    `pip install flet`
 
 3. Open cloned directory and execute:
 
-    python app.py
+    `python app.py`
 
 ### How to use?
 1. Open the app, go to music Tab
