@@ -28,7 +28,7 @@ The first release with a build and installer will be available soon. Now you can
 3. Press a **"+"** button and choose your downloaded song.
 4. Choose it from the list and press **"play"** button at the bottom right - this will start listening for hotkeys to start and stop the music. Got to sky, pick your instrument and press the keybind. The default ones are **"/"** to start playing and **"q"** to stop. You can change them in `config.json`file in the same directory, as well as all the notes buttons. 
 5. To switch music **you need** to hit the **play** into pause and play again
-6. You change the speed of the music by going into the .txt file of the music itself and adjust its value under the **"bpm"** field, or edit it somewhere like Sky Nightly
+6. You can change the speed of the music by going into the .txt file of the music itself and adjust its value under the **"bpm"** field, or edit it somewhere like Sky Nightly
 
 
 ### FAQ
