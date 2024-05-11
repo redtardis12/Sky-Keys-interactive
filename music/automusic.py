@@ -67,7 +67,7 @@ class MusicHandler:
 
             # Simulate the key press
             key_to_press = key_mapping.get(note['key'][4:])
-            pydirectinput.PAUSE=0.01
+            pydirectinput.PAUSE=0.001
             if key_to_press:
                 pydirectinput.press(key_to_press)
                 print(f"Pressed {key_to_press} for note {note['key']} at time {current_time_ms}")
