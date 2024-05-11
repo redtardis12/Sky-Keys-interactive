@@ -1,6 +1,6 @@
 
 # Sky-Keys-interactive
-An app for the PC version of sky to key bind expressions and auto play music with sheets
+An app for the PC version of Sky:COTL to key bind expressions and auto play music with sheets
 [![J4bp4AN.md.png](https://iili.io/J4bp4AN.md.png)](https://freeimage.host/i/J4bp4AN)
 
 [![J4bppHl.md.png](https://iili.io/J4bppHl.md.png)](https://freeimage.host/i/J4bppHl)
