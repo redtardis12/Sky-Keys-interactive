@@ -6,7 +6,9 @@ An app for the PC version of Sky:COTL to key bind expressions and auto play musi
 [![J4bppHl.md.png](https://iili.io/J4bppHl.md.png)](https://freeimage.host/i/J4bppHl)
 
 ## This is an initial source sync made just for the feedback, not an actual release !!!
-The first release with a build and installer will be available soon. Now you can use the app from the source. The code haven't been revised and just a proof of concept
+#### You can now download the pre-relase version [here](https://github.com/redtardis12/Sky-Keys-interactive/releases/tag/pre-release)
+Just extract the archive and launch .exe
+The code haven't been revised and just a proof of concept
 
 ### Currently working features
 > Automatic music player
