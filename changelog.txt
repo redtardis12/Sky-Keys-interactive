@@ -1,0 +1,7 @@
+Initial Pre-release
+
+WORK-IN-PROGRESS
+
+- fixed pydirectinput class' delay being too big, so it skipped notes
+- fixed a bug that continued running the hotkey process even after the app was closed
+- no longer need to restart hotkey process when switching songs

@@ -9,6 +9,15 @@ from music.automusic import mstart
 import multiprocessing
 
 
+def stop_hotkeys():
+    global music_proc
+    if music_proc:
+        music_proc.terminate()
+        music_proc.join()
+        music_proc = None
+        print("Stopped music")
+
+
 def main(page: Page, title="Sky: Keys interactive"):
 
     page.title = title
@@ -35,7 +44,7 @@ def main(page: Page, title="Sky: Keys interactive"):
             except Exception as err:
                 print(f"Error copying {file.path}: {err}")
 
-            song = ft.Radio(value=new_file_path, label=file.name.replace(".txt", ""))
+            song = ft.Radio(value=file.name, label=file.name.replace(".txt", ""))
             page.controls[0].controls[1].controls[1].content.content.controls.append(song)
         page.update()
        
@@ -55,6 +64,17 @@ def main(page: Page, title="Sky: Keys interactive"):
             e.control.icon = icons.PLAY_ARROW
             print("Stopped music")
         page.update()
+    
+
+    def restart_hotkeys(e):
+        global music_proc
+        print(e.control.value)
+        if music_proc:
+            stop_hotkeys()
+            print("Started music")
+            f = "music/songs/" + e.control.value
+            music_proc = multiprocessing.Process(target=mstart, args=(f,))
+            music_proc.start()
 
 
     def music_page():
@@ -68,7 +88,7 @@ def main(page: Page, title="Sky: Keys interactive"):
                 song = ft.Radio(value=midi_file, label=midi_file.replace(".txt", ""))
                 music_view.controls.append(song)
 
-        return ft.Container(content=ft.RadioGroup(content=music_view), expand=True)
+        return ft.Container(content=ft.RadioGroup(content=music_view, on_change=restart_hotkeys), expand=True)
 
 
     def emotes_page():
@@ -160,3 +180,4 @@ def main(page: Page, title="Sky: Keys interactive"):
 if __name__ == "__main__":
     multiprocessing.freeze_support()
     ft.app(target=main, assets_dir="emotes/assets")
+    stop_hotkeys()
