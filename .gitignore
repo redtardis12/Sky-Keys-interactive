@@ -162,3 +162,4 @@ cython_debug/
 emotes/tests
 skyvenv
 music/songs/*
+!music/songs/nomedia
