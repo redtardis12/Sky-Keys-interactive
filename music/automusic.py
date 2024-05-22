@@ -2,6 +2,32 @@ import json
 import time
 import keyboard
 import pydirectinput
+import codecs
+import pygetwindow as gw
+import chardet
+
+def convert_to_utf8(input_file, output_file):
+    """
+    Convert a JSON file from any encoding to UTF-8.
+    
+    Args:
+    input_file (str): Path to the input JSON file.
+    output_file (str): Path to the output JSON file.
+    """
+
+    with open(input_file, 'rb') as file:
+        raw_data = file.read()
+    
+    detected_encoding = chardet.detect(raw_data)['encoding']
+    if detected_encoding == 'UTF-8':
+        return
+
+    decoded_data = raw_data.decode(detected_encoding)
+
+    json_data = json.loads(decoded_data)
+
+    with open(output_file, 'w', encoding='utf-8') as file:
+        json.dump(json_data, file, ensure_ascii=False, indent=4)
 
 
 class MusicHandler:
@@ -19,10 +45,11 @@ class MusicHandler:
 
         keyboard.add_hotkey(self.stop_key, lambda: self.pause())
         while not self.exitProgram:
-            keyboard.wait(self.start_key)
-            time.sleep(2)
-            self.pauseProgram = False
-            self.simulate_keyboard_presses(notes, bpm)
+                keyboard.wait(self.start_key)
+                self.pauseProgram = False
+                time.sleep(2)
+                if gw.getActiveWindowTitle() == 'Sky':
+                    self.simulate_keyboard_presses(notes, bpm)
     
 
     def get_hotkeys(self):
@@ -31,8 +58,12 @@ class MusicHandler:
             return config["music"]["start_key"], config["music"]["stop_key"]
 
     def read_json_file(self, file_path):
-        with open(file_path, 'r') as file:
-            return json.load(file)
+        convert_to_utf8(self.file_path, self.file_path)
+        with codecs.open(file_path, 'r', 'utf-8', 'ignore') as file:
+            try:
+                return json.load(file)
+            except json.JSONDecodeError:
+                raise ValueError(f"Invalid JSON file: {file_path}. Probably wrong encoding, please make sure that your file is in UTF-8.")
     
     def quit(self):
         self.exitProgram=True
@@ -42,37 +73,42 @@ class MusicHandler:
     
     def simulate_keyboard_presses(self, notes, bpm):
 
+        hold_time = 0.05
+
         # Define a simple mapping of numbers to keyboard keys.
         with open('config.json', 'r') as file:
             config = json.load(file)
         key_mapping = config["music"]["key_mapping"]
 
-        # Calculate interval in seconds between beats
+        notes_dict = {}
+        for note in notes:
+            if note['time'] in notes_dict:
+                notes_dict[note['time']].append(key_mapping.get(note['key'][4:]))
+            else:
+                notes_dict[note['time']] = [key_mapping.get(note['key'][4:])]
+        notes = list(notes_dict.items())
+    
+
         beat_interval = 60 / bpm  # Seconds per beat
 
-        # Keep track of the last played time to manage relative delays
         last_time_ms = 0
+        pydirectinput.PAUSE=None
 
         for note in notes:
             if self.pauseProgram: break
-            current_time_ms = note['time']
-            # Calculate the delay needed from the last note to this one
+            current_time_ms = note[0]
             if last_time_ms != 0:
                 time_delay = (current_time_ms - last_time_ms) / 1000.0
             else:
                 time_delay = current_time_ms / 1000.0
 
-            # Wait for the next note to be simulated
             time.sleep(time_delay * beat_interval)
 
-            # Simulate the key press
-            key_to_press = key_mapping.get(note['key'][4:])
-            pydirectinput.PAUSE=0.000001
+            key_to_press = note[1]
             if key_to_press:
-                pydirectinput.press(key_to_press)
-                print(f"Pressed {key_to_press} for note {note['key']} at time {current_time_ms}")
+                pydirectinput.hotkey(*key_to_press, wait=hold_time)
+                print(f"Pressed {key_to_press} at time {current_time_ms}")
 
-            # Update the last_time_ms to the current note's time
             last_time_ms = current_time_ms
 
 def mstart(file):

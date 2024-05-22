@@ -1,9 +1,7 @@
 import os
-import json
 import shutil
-import threading
 import flet as ft
-from flet import Image, GridView, Container, NavigationRailDestination, Page, Text, IconButton, AppBar, colors, icons
+from flet import GridView, Container, NavigationRailDestination, Page, Text, IconButton, AppBar, colors, icons
 from reactive_menu import ResponsiveMenuLayout
 from music.automusic import mstart
 import multiprocessing
@@ -44,7 +42,7 @@ def main(page: Page, title="Sky: Keys interactive"):
             except Exception as err:
                 print(f"Error copying {file.path}: {err}")
 
-            song = ft.Radio(value=file.name, label=file.name.replace(".txt", ""))
+            song = ft.Radio(value=file.name, label=file.name.replace(".txt", "").replace(".json", ""))
             page.controls[0].controls[1].controls[1].content.content.controls.append(song)
         page.update()
        
@@ -84,8 +82,8 @@ def main(page: Page, title="Sky: Keys interactive"):
         music_view.controls.append(fp)
         music_view.controls.append(add_btn)
         for midi_file in os.listdir("music/songs/"):
-            if midi_file.endswith(".txt"):
-                song = ft.Radio(value=midi_file, label=midi_file.replace(".txt", ""))
+            if midi_file.endswith(".txt") or midi_file.endswith(".json"):
+                song = ft.Radio(value=midi_file, label=midi_file.replace(".txt", "").replace(".json", ""))
                 music_view.controls.append(song)
 
         return ft.Container(content=ft.RadioGroup(content=music_view, on_change=restart_hotkeys), expand=True)
